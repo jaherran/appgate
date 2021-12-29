@@ -1,0 +1,10 @@
+version: '3.4'
+services:
+   helloflask:
+      build:
+         context: helloflask/app/
+         dockerfile: helloflask.dockerfile
+      container_name: helloflask
+      image: zelfick/helloflask:1.0
+      ports:
+         - 5000:5000

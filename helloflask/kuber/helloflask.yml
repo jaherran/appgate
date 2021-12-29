@@ -1,0 +1,36 @@
+# Include service and deployment in one file because they are tied together
+apiVersion: apps/v1
+kind: Deployment  #Blueprint for the pod
+metadata:
+  name: helloflask-deployment
+  labels:
+    app: helloflask
+spec:
+  replicas: 1
+  selector:
+    matchLabels: #Which pods belongs to which deployment
+      app: helloflask
+  template: #configuracion of the pod
+    metadata:
+      labels:  #required field for pods
+        app: helloflask
+    spec:
+      containers:  #which image, which port for the container
+      - name: helloflask
+        image: "zelfick/helloflask:1.0"
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: helloflask-service
+spec:
+  type: NodePort #Making accessible from the browser external service
+  selector:  #Connecting service to pods
+    app: helloflask
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000  #container port of deployment
+      nodePort: 30100  #Exposes the service on each NodeIp as static IP
